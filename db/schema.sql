@@ -36,4 +36,4 @@ CREATE TABLE employees (
     PRIMARY KEY (id)
 );
 
-\i db/seedDefault.sql;
+\i db/seed.sql;
