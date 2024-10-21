@@ -5,17 +5,23 @@ import Choices from "inquirer/lib/objects/choices";
 import { employeeData, jobData, salaryData, departmentData } from "./index.js";
 
 export const homeList = 
-[
-    'View all employees',
-    'Add employee',
-    'Update employee role',
-    'View all roles',
-    'Add role',
-    'View all departments',
-    `Add department`,
-    `Exit`,
-]
-
+[{
+    type: 'list',
+    name: 'action',
+    message: "Please choose and option, scroll to view more",
+    choices:
+    [
+        'View all employees',
+        'Add employee',
+        'Update employee role',
+        'View all roles',
+        'Add role',
+        'View all departments',
+        `Add department`,
+        `Exit`,
+    ]
+}];
+    
 export async function createEmployee() {
 
     const jobs = await jobData();
