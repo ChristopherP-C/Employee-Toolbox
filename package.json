@@ -2,7 +2,7 @@
   "name": "employee-toolbox",
   "version": "1.0.0",
   "description": "Tool for viewing and interaction with a list of your companies employees",
-  "main": "index.js",
+  "main": "dist/index.js",
   "type": "module",
   "scripts": {
     "build": "npx tsc",
@@ -12,10 +12,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.4.5",
     "inquirer": "^8.2.4",
     "pg": "^8.13.0"
   },
   "devDependencies": {
+    "@types/inquirer": "^9.0.7",
+    "@types/pg": "^8.11.10",
     "typescript": "^5.6.3"
   }
 }
