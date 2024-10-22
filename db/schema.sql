@@ -35,7 +35,7 @@ CREATE TABLE employees (
     manager_id INTEGER DEFAULT NULL,
     FOREIGN KEY(job_id)
     REFERENCES jobs(jobs_id)
-    ON DELETE SET NULL,
+    ON DELETE CASCADE,
     FOREIGN KEY(manager_id)
     REFERENCES employees(employees_id)
     ON DELETE SET NULL,
