@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import pg, { QueryResult } from "pg";
 import { home } from "./interface.js";
 import inquirer from "inquirer";
-import { createEmployee, createJob, homeList, depQuestions, changeJob, changeLead, getDepartments, getManagers } from "./questions.js";
+import { createEmployee, createJob, homeList, depQuestions, changeJob, changeLead, getDepartments, getManagers, getEmployees, getJobs } from "./questions.js";
 
 dotenv.config();
 
@@ -287,6 +287,60 @@ export async function changeManager() {
         } finally {
             await client.end();
         };
+};
+
+export async function deleteEmployee() {
+    const client = new Client();
+    await client.connect();
+
+    const employeeList = await getEmployees();
+
+    const answers = await inquirer.prompt(employeeList);
+    try {
+        await client.query
+        (`DELETE FROM employees WHERE employees_id = $1`, [answers.employee]);
+        console.log(`An employee has been terminated`);
+    } catch (err) {
+        console.log(`Employee could not be deleted!`, err);
+    } finally {
+        await client.end();
+    }
+};
+
+export async function deleteJob() {
+    const client = new Client();
+    await client.connect();
+
+    const jobList = await getJobs();
+
+    const answers = await inquirer.prompt(jobList);
+    try {
+        await client.query
+        (`DELETE FROM jobs WHERE jobs_id = $1`, [answers.job]);
+        console.log(`A job has been deleted`);
+    } catch (err) {
+        console.log(`job could not be deleted!`, err);
+    } finally {
+        await client.end();
+    }
+};
+
+export async function deleteDepartment() {
+    const client = new Client();
+    await client.connect();
+
+    const departmentList = await getDepartments();
+
+    const answers = await inquirer.prompt(departmentList);
+    try {
+        await client.query
+        (`DELETE FROM departments WHERE departments_id = $1`, [answers.department]);
+        console.log(`A department has been deleted`);
+    } catch (err) {
+        console.log(`department could not be deleted!`, err);
+    } finally {
+        await client.end();
+    }
 };
 
 console.log(

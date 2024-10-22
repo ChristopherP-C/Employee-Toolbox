@@ -2,8 +2,8 @@ import dotenv from "dotenv";
 import pg from "pg";
 import inquirer from "inquirer";
 import { type } from "os";
-import { createEmployee, createJob, homeList, depQuestions, changeLead, viewList } from "./questions.js";
-import { addDepartment, addEmployee, addJob, budget, changeManager, changeRole, viewAll, viewDep, viewDepartments, viewJobs, viewManagers } from "./index.js";
+import { createEmployee, createJob, homeList, depQuestions, changeLead, viewList, deleteList } from "./questions.js";
+import { addDepartment, addEmployee, addJob, budget, changeManager, changeRole, deleteDepartment, deleteEmployee, deleteJob, viewAll, viewDep, viewDepartments, viewJobs, viewManagers } from "./index.js";
 
 export async function home() {
 
@@ -44,6 +44,17 @@ export async function home() {
 
         } else if (answers.action === `View department utilized budget`) {
             await budget();
+        
+        } else if (answers.action === `Delete`) {
+            await inquirer.prompt(deleteList).then(async(answers) => {
+                if (answers.delete === `employees`) {
+                    await deleteEmployee();
+                } else if (answers.action === `jobs`) {
+                    await deleteJob();
+                } else {
+                    await deleteDepartment();
+                }
+            });
 
         } else if (answers.action === `Exit`) {
             await console.log (
