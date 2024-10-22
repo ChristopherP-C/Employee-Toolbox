@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import pg, { QueryResult } from "pg";
 import { home } from "./interface.js";
 import inquirer from "inquirer";
-import { createEmployee, createJob, homeList, depQuestions, changeJob, changeLead, getDepartments } from "./questions.js";
+import { createEmployee, createJob, homeList, depQuestions, changeJob, changeLead, getDepartments, getManagers } from "./questions.js";
 
 dotenv.config();
 
@@ -23,6 +23,26 @@ export async function employeeData() {
     await client.end();
 
     return employeeList;
+};
+
+export async function managerData() {
+    const client = new Client();
+    await client.connect();
+
+    const results = await client.query(
+        `SELECT DISTINCT managers.employees_id, CONCAT(managers.first_name, ' ', managers.last_name) 
+        AS manager_name FROM employees AS employees
+        JOIN employees AS managers ON employees.manager_id = managers.employees_id
+        WHERE managers.employees_id IS NOT NULL;`);
+
+    const managerChoices = results.rows.map( manager => ({
+        name: manager.manager_name,
+        value: manager.employees_id
+    }));
+
+    await client.end();
+
+    return managerChoices;
 };
 
 export async function jobData() {
@@ -83,6 +103,41 @@ export async function viewAll() {
         AS manager FROM employees JOIN jobs ON employees.job_id = jobs_id 
         JOIN departments ON jobs.department_id = departments_id LEFT JOIN 
         employees AS managers ON employees.manager_id = managers.employees_id;`
+    );
+    console.table(results.rows);
+    await client.end();
+}
+
+export async function viewDep() {
+    const client = new Client();
+    await client.connect();
+
+    const depList = await getDepartments();
+    
+    const answers = await inquirer.prompt(depList);
+
+    const results = await client.query(
+        `SELECT department_name, CONCAT(employees.first_name, ' ', employees.last_name) AS employee 
+        FROM employees JOIN jobs ON employees.job_id = jobs_id JOIN departments 
+        ON jobs.department_id = departments_id WHERE departments_id = $1;`, [answers.department]
+    );
+    console.table(results.rows);
+    await client.end();
+}
+
+export async function viewManagers() {
+    const client = new Client();
+    await client.connect();
+
+    const ourManagers = await getManagers();
+    
+    const answers = await inquirer.prompt(ourManagers);
+
+    const results = await client.query(
+        `SELECT CONCAT(manager.first_name, ' ', manager.last_name) AS manager, 
+        CONCAT(employees.first_name, ' ', employees.last_name) AS employee
+        FROM employees JOIN employees AS manager ON employees.manager_id = manager.employees_id
+        WHERE employees.manager_id = $1;`, [answers.manager]
     );
     console.table(results.rows);
     await client.end();

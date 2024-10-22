@@ -2,7 +2,7 @@ import inquirer from "inquirer";
 import { type } from "os";
 import pg from "pg";
 import Choices from "inquirer/lib/objects/choices";
-import { employeeData, jobData, salaryData, departmentData } from "./index.js";
+import { employeeData, jobData, salaryData, departmentData, managerData } from "./index.js";
 
 export const homeList = 
 [{
@@ -11,7 +11,7 @@ export const homeList =
     message: "Please choose and option, scroll to view more",
     choices:
     [
-        'View all employees',
+        'View employees',
         'Add employee',
         'Update employee role',
         `Update employee manager`,
@@ -49,7 +49,7 @@ export async function changeJob() {
 export async function changeLead() {
     const employees = await employeeData();
 
-    const jobsList =
+    const managerList =
     [
         {
             type: `list`,
@@ -67,8 +67,9 @@ export async function changeLead() {
             ],
         },
     ];
-    return jobsList;
+    return managerList;
 };
+
 export async function createEmployee() {
 
     const jobs = await jobData();
@@ -140,11 +141,26 @@ export async function createEmployee() {
         {
             type: `list`,
             name: `department`,
-            message: "Select a department to see its total utilized budget",
+            message: "Select a department",
             choices: departments,
         },
     ];
     return depList;
+ };
+
+ export async function getManagers() {
+    const managers = await managerData();
+
+    const managerChoices =
+    [
+        {
+            type: `list`,
+            name: `manager`,
+            message: "Select a manager",
+            choices: managers,
+        },
+    ];
+    return managerChoices;
  };
 
 export const depQuestions =
@@ -153,5 +169,19 @@ export const depQuestions =
         type: `input`,
         name: `depName`,
         message: "Please enter demartment name",
+        },
+    ];
+
+export const viewList =
+    [
+        {
+            type: `list`,
+            name: `view`,
+            message: "Would you like to view all employees, or based on either department or manager?",
+            choices: [
+                `View all`,
+                `By department`,
+                `By manager`
+            ],
         },
     ];
