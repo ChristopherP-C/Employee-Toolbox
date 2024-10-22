@@ -37,3 +37,15 @@ console.table(departments2.rows);
 
 await client.end();
 console.log(`goodbye!`);
+
+// DO $$
+//   DECLARE
+//   BEGIN
+  
+// RAISE NOTICE 'complete';
+
+// EXCEPTION
+//     WHEN OTHERS THEN
+//         RAISE NOTICE 'An error occurred: %', SQLERRM; -- Log the error
+//         ROLLBACK; 
+// END $$;
