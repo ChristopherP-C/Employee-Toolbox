@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import pg from "pg";
 import { home } from "./interface.js";
 import inquirer from "inquirer";
-import { createEmployee, createJob, depQuestions } from "./questions.js";
+import { createEmployee, createJob, depQuestions, changeJob } from "./questions.js";
 dotenv.config();
 const { Client } = pg;
 export async function employeeData() {
@@ -131,6 +131,48 @@ export async function addDepartment() {
     }
 }
 ;
+export async function changeRole() {
+    const client = new Client();
+    await client.connect();
+    const jobsList = await changeJob();
+    const answers = await inquirer.prompt(jobsList);
+    console.log(`${answers.employee} ${answers.job}`);
+    try {
+        await client.query(`UPDATE employees SET job_id = $1 WHERE employees_id = $2`, [answers.jobs, answers.employees]);
+        console.log(`Employee role has changed!`);
+    }
+    catch (err) {
+        console.log(`Something went wrong!`, err);
+    }
+    finally {
+        await client.end();
+    }
+    ;
+}
+;
+await console.log(`                  @%++*%@               
+                 %**=--==+**#%@@        
+               @#++###*+==+++**********@
+              %#+*#********###*+=====*%%
+             @++#*****++++++++++++##%##%
+  @@@@%%%#######****+++++++++=++=*%##%@@
+%%%##**++++====++++*##**+++====+%##%@@  
+%##*****##*+==+***##########*+=+#%@@    
+%##*******##**%#############%%%#@       
+%##******#%*+++*#%%#####%#*++***%       
+%#####**************%#+++*******%       
+%########**********+#*++********%       
+%#########**********#*+*********%       
+ @%########*********#***********%       
+    @%%#**####******#********###@       
+       @%##**###**##%*****###***%       
+          @%##**####%**##*****##@       
+             @######%##****%@@          
+               @####%***#@              
+                @%##%*#@                
+                  @%@@                  
+                  
+        The toolbox is open!`);
 home();
 // export async function employees() {
 //     await client.query(`SELECT * FROM employees`);
