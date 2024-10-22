@@ -154,6 +154,11 @@ export async function changeManager() {
     await client.connect();
     const managerList = await changeLead();
     const answers = await inquirer.prompt(managerList);
+    if (answers.manager === answers.employees) {
+        console.log(`Cannot set employee to their own manager, must be set none`);
+        await client.end();
+        return;
+    }
     try {
         await client.query(`UPDATE employees SET manager_id = $1 WHERE employees_id = $2`, [answers.manager, answers.employees]);
         console.log(`Employee manager has changed!`);
