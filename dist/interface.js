@@ -1,6 +1,6 @@
 import inquirer from "inquirer";
 import { homeList } from "./questions.js";
-import { addDepartment, addEmployee, addJob, changeManager, changeRole, viewAll, viewDepartments, viewJobs } from "./index.js";
+import { addDepartment, addEmployee, addJob, budget, changeManager, changeRole, viewAll, viewDepartments, viewJobs } from "./index.js";
 export async function home() {
     inquirer.prompt(homeList).then(async (answers) => {
         let exit = false;
@@ -27,6 +27,9 @@ export async function home() {
         }
         else if (answers.action === `Add department`) {
             await addDepartment();
+        }
+        else if (answers.action === `View department utilized budget`) {
+            await budget();
         }
         else if (answers.action === `Exit`) {
             await console.log(`                   

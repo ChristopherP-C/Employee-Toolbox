@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import pg, { QueryResult } from "pg";
 import { home } from "./interface.js";
 import inquirer from "inquirer";
-import { createEmployee, createJob, homeList, depQuestions, changeJob, changeLead } from "./questions.js";
+import { createEmployee, createJob, homeList, depQuestions, changeJob, changeLead, getDepartments } from "./questions.js";
 
 dotenv.config();
 
@@ -111,6 +111,28 @@ export async function viewDepartments() {
     await client.end();
 }
 
+export async function budget() {
+    const client = new Client();
+    await client.connect();
+
+    const depList = await getDepartments();
+    
+    const answers = await inquirer.prompt(depList);
+
+    try {
+        const results = await client.query(`SELECT SUM(salary) FROM jobs WHERE department_id = $1`,
+        [answers.department]);
+        console.log(`Here is this departments total salary cost`);
+        console.table(results.rows);
+    } catch(err) {
+        console.log(`Something failed!`, err);
+    } finally {
+        await client.end();
+    };
+
+ };
+
+
 export async function addEmployee() {
     const client = new Client();
     await client.connect();
@@ -211,7 +233,8 @@ export async function changeManager() {
             await client.end();
         };
 };
-await console.log(
+
+console.log(
     `                  @%++*%@               
                  %**=--==+**#%@@        
                @#++###*+==+++**********@

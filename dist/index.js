@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import pg from "pg";
 import { home } from "./interface.js";
 import inquirer from "inquirer";
-import { createEmployee, createJob, depQuestions, changeJob, changeLead } from "./questions.js";
+import { createEmployee, createJob, depQuestions, changeJob, changeLead, getDepartments } from "./questions.js";
 dotenv.config();
 const { Client } = pg;
 export async function employeeData() {
@@ -78,6 +78,25 @@ export async function viewDepartments() {
     console.table(results.rows);
     await client.end();
 }
+export async function budget() {
+    const client = new Client();
+    await client.connect();
+    const depList = await getDepartments();
+    const answers = await inquirer.prompt(depList);
+    try {
+        const results = await client.query(`SELECT SUM(salary) FROM jobs WHERE department_id = $1`, [answers.department]);
+        console.log(`Here is this departments total salary cost`);
+        console.table(results.rows);
+    }
+    catch (err) {
+        console.log(`Something failed!`, err);
+    }
+    finally {
+        await client.end();
+    }
+    ;
+}
+;
 export async function addEmployee() {
     const client = new Client();
     await client.connect();
@@ -155,7 +174,8 @@ export async function changeManager() {
     const managerList = await changeLead();
     const answers = await inquirer.prompt(managerList);
     if (answers.manager === answers.employees) {
-        console.log(`Cannot set employee to their own manager, must be set none`);
+        console.log(`Warning: Cannot set employee to their own manager, must be set none`);
+        console.log(`Your request did not complete`);
         await client.end();
         return;
     }
@@ -172,7 +192,7 @@ export async function changeManager() {
     ;
 }
 ;
-await console.log(`                  @%++*%@               
+console.log(`                  @%++*%@               
                  %**=--==+**#%@@        
                @#++###*+==+++**********@
               %#+*#********###*+=====*%%

@@ -49,5 +49,3 @@ EXCEPTION
         RAISE NOTICE 'An error occurred: %', SQLERRM; -- Log the error
         ROLLBACK; 
 END $$;
-
-\i db/seed.sql;
