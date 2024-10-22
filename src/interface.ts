@@ -2,16 +2,24 @@ import dotenv from "dotenv";
 import pg from "pg";
 import inquirer from "inquirer";
 import { type } from "os";
-import { createEmployee, createJob, homeList, depQuestions, changeLead } from "./questions.js";
-import { addDepartment, addEmployee, addJob, budget, changeManager, changeRole, viewAll, viewDepartments, viewJobs } from "./index.js";
+import { createEmployee, createJob, homeList, depQuestions, changeLead, viewList } from "./questions.js";
+import { addDepartment, addEmployee, addJob, budget, changeManager, changeRole, viewAll, viewDep, viewDepartments, viewJobs, viewManagers } from "./index.js";
 
 export async function home() {
 
     inquirer.prompt(homeList).then(async(answers) => {
         let exit = false;
 
-        if (answers.action === 'View all employees') {
-            await viewAll();
+        if (answers.action === 'View employees') {
+            await inquirer.prompt(viewList).then(async(answers) => {
+                if (answers.view === `View all`) {
+                    await viewAll();
+                } else if (answers.view === `By department`) {
+                    await viewDep();
+                } else {
+                    await viewManagers();
+                }
+            });
 
         } else if (answers.action === 'Add employee') {
             await addEmployee();
