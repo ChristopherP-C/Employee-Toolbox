@@ -53,9 +53,25 @@ export async function departmentData() {
 export async function viewAll() {
     const client = new Client();
     await client.connect();
-    const results = await client.query(`SELECT * FROM employees
-        JOIN jobs ON employees.job = jobs.id
-        JOIN departments ON jobs.department = departments.id`);
+    const results = await client.query(`SELECT employees_id, CONCAT(first_name, ' ', last_name) 
+        AS employee_name, title, salary, department_name 
+        FROM employees JOIN jobs ON employees.job_id = jobs_id 
+        JOIN departments ON jobs.department_id = departments_id;`);
+    console.table(results.rows);
+    await client.end();
+}
+export async function viewJobs() {
+    const client = new Client();
+    await client.connect();
+    const results = await client.query(`SELECT jobs_id, title, salary, department_name 
+    FROM jobs JOIN departments ON jobs.department_id = departments_id;`);
+    console.table(`${results.rows}`);
+    await client.end();
+}
+export async function viewDepartments() {
+    const client = new Client();
+    await client.connect();
+    const results = await client.query(`SELECT departments_id, department_name FROM departments`);
     console.table(results.rows);
     await client.end();
 }

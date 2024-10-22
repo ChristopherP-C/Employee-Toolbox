@@ -3,7 +3,7 @@ import pg from "pg";
 import inquirer from "inquirer";
 import { type } from "os";
 import { createEmployee, createJob, homeList, depQuestions } from "./questions.js";
-import { viewAll } from "./index.js";
+import { viewAll, viewDepartments, viewJobs } from "./index.js";
 
 export async function home() {
 
@@ -17,11 +17,11 @@ export async function home() {
         } else if (answers.action === 'Update employee role') {
             console.log(`update employee`);
         } else if (answers.action === 'View all roles') {
-            console.log(`jobs`);
+            viewJobs();
         } else if (answers.action === 'Add role') {
             console.log(`more jobs`);
         } else if (answers.action === 'View all departments') {
-            console.log(`departments`);
+            viewDepartments();
         } else if (answers.action === `Add department`) {
             console.log(`more departments`);
         } else if (answers.action === `Exit`) {
