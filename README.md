@@ -34,6 +34,8 @@
 
   Then from the root folder open your CLI terminal into postgres and run \i db/schema.sql to initialize the database. If you also wish to pre-populate your database you can then run \i db/seed.sql from here you can exit your postgres, and now simply run npm run start in your CLI whenever you wish to use the Employee-Toolbox!
 
+  Watch how to navigate it here => https://drive.google.com/file/d/1mtQCsnViF1T5ZavNjhe1hwz1YEEozFyN/view?usp=sharing
+
   ## Credits
   made using the inquirer package: github.com/SBoudrias/Inquirer.js
 
