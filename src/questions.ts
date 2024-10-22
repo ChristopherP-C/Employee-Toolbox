@@ -19,6 +19,7 @@ export const homeList =
         'Add role',
         'View all departments',
         `Add department`,
+        `View department utilized budget`,
         `Exit`,
     ]
 }];
@@ -130,6 +131,21 @@ export async function createEmployee() {
     ];
     return jobQuestions;
  }
+
+ export async function getDepartments() {
+    const departments = await departmentData();
+
+    const depList =
+    [
+        {
+            type: `list`,
+            name: `department`,
+            message: "Select a department to see its total utilized budget",
+            choices: departments,
+        },
+    ];
+    return depList;
+ };
 
 export const depQuestions =
     [
