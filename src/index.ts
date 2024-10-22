@@ -193,6 +193,12 @@ export async function changeManager() {
     const managerList = await changeLead();
 
     const answers = await inquirer.prompt(managerList);
+    if (answers.manager === answers.employees) {
+        console.log(`Warning: Cannot set employee to their own manager, must be set none`);
+        console.log(`Your request did not complete`);
+        await client.end();
+        return;
+    }
 
     try {
         await client.query
