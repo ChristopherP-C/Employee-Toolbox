@@ -1,6 +1,8 @@
 import dotenv from "dotenv";
-import pg from "pg";
+import pg, { QueryResult } from "pg";
 import { home } from "./interface.js";
+import inquirer from "inquirer";
+import { createEmployee, createJob, homeList, depQuestions } from "./questions.js";
 
 dotenv.config();
 
@@ -15,7 +17,7 @@ export async function employeeData() {
 
     const employeeList = results.rows.map( employee => ({
         name: `${employee.first_name} ${employee.last_name}`,
-        value: employee.id,
+        value: employee.employees_id
     }));
 
     await client.end();
@@ -29,9 +31,9 @@ export async function jobData() {
 
     const results = await client.query(`SELECT * FROM jobs`);
 
-    const jobList = results.rows.map( job => ({
+    const jobList = results.rows.map(job => ({
         name: job.title,
-        value: job.id,
+        value: job.jobs_id
     }));
 
     await client.end();
@@ -47,7 +49,7 @@ export async function salaryData() {
 
     const salaryList = results.rows.map( job => ({
         name: job.salary,
-        value: job.id,
+        value: job.jobs_id
     }));
 
     await client.end();
@@ -62,8 +64,8 @@ export async function departmentData() {
     const results = await client.query(`SELECT * FROM departments`);
 
     const departmentList = results.rows.map(department => ({
-        name: department.name,
-        value: department.id,
+        name: department.department_name,
+        value: department.departments_id
     }));
 
     await client.end();
@@ -76,10 +78,11 @@ export async function viewAll() {
     await client.connect();
 
     const results = await client.query(
-        `SELECT employees_id, CONCAT(first_name, ' ', last_name) 
-        AS employee_name, title, salary, department_name 
-        FROM employees JOIN jobs ON employees.job_id = jobs_id 
-        JOIN departments ON jobs.department_id = departments_id;`
+        `SELECT employees.employees_id, CONCAT(employees.first_name, ' ', employees.last_name) 
+        AS employee_name, title, salary, department_name, CONCAT(managers.first_name, ' ', managers.last_name) 
+        AS manager FROM employees JOIN jobs ON employees.job_id = jobs_id 
+        JOIN departments ON jobs.department_id = departments_id LEFT JOIN 
+        employees AS managers ON employees.manager_id = managers.employees_id;`
     );
     console.table(results.rows);
     await client.end();
@@ -108,6 +111,60 @@ export async function viewDepartments() {
     await client.end();
 }
 
+export async function addEmployee() {
+    const client = new Client();
+    await client.connect();
+
+    const employeeQuestions = await createEmployee();
+
+    const answers = await inquirer.prompt(employeeQuestions);
+
+    try {
+        await client.query(`INSERT INTO employees (first_name, last_name, job_id, manager_id)
+            VALUES ($1, $2, $3, $4)`, [answers.firstName, answers.lastName, answers.job, answers.manager]);
+            console.log(`New employee added!`);
+        } catch (err) {
+            console.log(`Something failed!`, err);
+        } finally {
+            await client.end();
+        }
+};
+
+export async function addJob() {
+    const client = new Client();
+    await client.connect();
+
+    const jobQuestions = await createJob();
+
+    const answers = await inquirer.prompt(jobQuestions);
+
+    try {
+        await client.query(`INSERT INTO jobs (title, salary, department_id)
+            VALUES ($1, $2, $3)`, [answers.jobTitle, answers.jobSalary, answers.jobDepartment]);
+            console.log(`New job created!`);
+        } catch (err) {
+            console.log(`Something failed!`, err);
+        } finally {
+            await client.end();
+        }
+};
+
+export async function addDepartment() {
+    const client = new Client();
+    await client.connect();
+
+    const answers = await inquirer.prompt(depQuestions);
+
+    try {
+        await client.query(`INSERT INTO departments (department_name)
+            VALUES ($1)`, [answers.depName]);
+            console.log(`New department created!`);
+        } catch (err) {
+            console.log(`Something failed!`, err);
+        } finally {
+            await client.end();
+        }
+};
 home();
 // export async function employees() {
 //     await client.query(`SELECT * FROM employees`);

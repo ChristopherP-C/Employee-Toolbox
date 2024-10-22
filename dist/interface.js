@@ -1,36 +1,36 @@
 import inquirer from "inquirer";
 import { homeList } from "./questions.js";
-import { viewAll, viewDepartments, viewJobs } from "./index.js";
+import { addDepartment, addEmployee, addJob, viewAll, viewDepartments, viewJobs } from "./index.js";
 export async function home() {
-    inquirer.prompt(homeList).then((answers) => {
+    inquirer.prompt(homeList).then(async (answers) => {
         let exit = false;
         if (answers.action === 'View all employees') {
-            viewAll();
+            await viewAll();
         }
         else if (answers.action === 'Add employee') {
-            console.log(`add employee`);
+            await addEmployee();
         }
         else if (answers.action === 'Update employee role') {
             console.log(`update employee`);
         }
         else if (answers.action === 'View all roles') {
-            viewJobs();
+            await viewJobs();
         }
         else if (answers.action === 'Add role') {
-            console.log(`more jobs`);
+            await addJob();
         }
         else if (answers.action === 'View all departments') {
-            viewDepartments();
+            await viewDepartments();
         }
         else if (answers.action === `Add department`) {
-            console.log(`more departments`);
+            await addDepartment();
         }
         else if (answers.action === `Exit`) {
             console.log(`goodbye`);
             exit = true;
         }
         if (!exit) {
-            home();
+            await home();
         }
     });
 }
