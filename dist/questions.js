@@ -13,6 +13,7 @@ export const homeList = [{
             'View all departments',
             `Add department`,
             `View department utilized budget`,
+            `Delete`,
             `Exit`,
         ]
     }];
@@ -125,6 +126,32 @@ export async function getDepartments() {
     return depList;
 }
 ;
+export async function getEmployees() {
+    const employees = await employeeData();
+    const employeeList = [
+        {
+            type: `list`,
+            name: `employee`,
+            message: "Select an employee",
+            choices: employees,
+        },
+    ];
+    return employeeList;
+}
+;
+export async function getJobs() {
+    const jobs = await jobData();
+    const jobList = [
+        {
+            type: `list`,
+            name: `job`,
+            message: "Select a job",
+            choices: jobs,
+        },
+    ];
+    return jobList;
+}
+;
 export async function getManagers() {
     const managers = await managerData();
     const managerChoices = [
@@ -143,6 +170,18 @@ export const depQuestions = [
         type: `input`,
         name: `depName`,
         message: "Please enter demartment name",
+    },
+];
+export const deleteList = [
+    {
+        type: `list`,
+        name: `delete`,
+        message: "Please select which area to delete from",
+        choices: [
+            `employees`,
+            `jobs`,
+            `departments`
+        ],
     },
 ];
 export const viewList = [

@@ -31,7 +31,7 @@ CREATE TABLE employees (
     employees_id SERIAL,
     first_name VARCHAR(20) NOT NULL,
     last_name VARCHAR(30) NOT NULL,
-    job_id INTEGER NOT NULL,
+    job_id INTEGER,
     manager_id INTEGER DEFAULT NULL,
     FOREIGN KEY(job_id)
     REFERENCES jobs(jobs_id)
