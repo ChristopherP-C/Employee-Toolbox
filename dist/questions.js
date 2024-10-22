@@ -14,6 +14,26 @@ export const homeList = [{
             `Exit`,
         ]
     }];
+export async function changeJob() {
+    const jobs = await jobData();
+    const employees = await employeeData();
+    const jobsList = [
+        {
+            type: `list`,
+            name: `employees`,
+            message: "Select which employee whose role you would like to change",
+            choices: employees,
+        },
+        {
+            type: `list`,
+            name: `jobs`,
+            message: "Please select a new role for this employee",
+            choices: jobs,
+        },
+    ];
+    return jobsList;
+}
+;
 export async function createEmployee() {
     const jobs = await jobData();
     const employees = await employeeData();

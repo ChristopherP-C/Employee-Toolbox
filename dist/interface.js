@@ -1,6 +1,6 @@
 import inquirer from "inquirer";
 import { homeList } from "./questions.js";
-import { addDepartment, addEmployee, addJob, viewAll, viewDepartments, viewJobs } from "./index.js";
+import { addDepartment, addEmployee, addJob, changeRole, viewAll, viewDepartments, viewJobs } from "./index.js";
 export async function home() {
     inquirer.prompt(homeList).then(async (answers) => {
         let exit = false;
@@ -11,7 +11,7 @@ export async function home() {
             await addEmployee();
         }
         else if (answers.action === 'Update employee role') {
-            console.log(`update employee`);
+            await changeRole();
         }
         else if (answers.action === 'View all roles') {
             await viewJobs();
@@ -26,7 +26,21 @@ export async function home() {
             await addDepartment();
         }
         else if (answers.action === `Exit`) {
-            console.log(`goodbye`);
+            await console.log(`                   
+            *#%%%%%%%%             
+          @%%        ##@            
+ *++========+++======+++========++* 
+%%################################%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%*=-#%%%%%%%%%%%%%%%%
+ %%%%%%%%%%%%%%%#--#%%%%%%%%%%%%%%% 
+ %%%%%%%%%%%%%%%%##%%%%%%%%%%%%%%%% 
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%     
+ 
+The toolbox is now closed, goodbye!`);
             exit = true;
         }
         if (!exit) {
