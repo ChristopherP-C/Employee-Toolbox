@@ -1,6 +1,6 @@
 import inquirer from "inquirer";
 import { homeList } from "./questions.js";
-import { addDepartment, addEmployee, addJob, changeRole, viewAll, viewDepartments, viewJobs } from "./index.js";
+import { addDepartment, addEmployee, addJob, changeManager, changeRole, viewAll, viewDepartments, viewJobs } from "./index.js";
 export async function home() {
     inquirer.prompt(homeList).then(async (answers) => {
         let exit = false;
@@ -12,6 +12,9 @@ export async function home() {
         }
         else if (answers.action === 'Update employee role') {
             await changeRole();
+        }
+        else if (answers.action === `Update employee manager`) {
+            await changeManager();
         }
         else if (answers.action === 'View all roles') {
             await viewJobs();

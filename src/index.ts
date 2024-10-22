@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import pg, { QueryResult } from "pg";
 import { home } from "./interface.js";
 import inquirer from "inquirer";
-import { createEmployee, createJob, homeList, depQuestions, changeJob } from "./questions.js";
+import { createEmployee, createJob, homeList, depQuestions, changeJob, changeLead } from "./questions.js";
 
 dotenv.config();
 
@@ -173,7 +173,6 @@ export async function changeRole() {
     const jobsList = await changeJob();
 
     const answers = await inquirer.prompt(jobsList);
-    console.log(`${answers.employee} ${answers.job}`);
 
     try {
         await client.query
@@ -187,6 +186,25 @@ export async function changeRole() {
         };
 };
 
+export async function changeManager() {
+    const client = new Client();
+    await client.connect();
+
+    const managerList = await changeLead();
+
+    const answers = await inquirer.prompt(managerList);
+
+    try {
+        await client.query
+        (`UPDATE employees SET manager_id = $1 WHERE employees_id = $2`, 
+            [answers.manager, answers.employees]);
+            console.log(`Employee manager has changed!`);
+        } catch (err) {
+            console.log(`Something went wrong!`, err);
+        } finally {
+            await client.end();
+        };
+};
 await console.log(
     `                  @%++*%@               
                  %**=--==+**#%@@        

@@ -2,8 +2,8 @@ import dotenv from "dotenv";
 import pg from "pg";
 import inquirer from "inquirer";
 import { type } from "os";
-import { createEmployee, createJob, homeList, depQuestions } from "./questions.js";
-import { addDepartment, addEmployee, addJob, changeRole, viewAll, viewDepartments, viewJobs } from "./index.js";
+import { createEmployee, createJob, homeList, depQuestions, changeLead } from "./questions.js";
+import { addDepartment, addEmployee, addJob, changeManager, changeRole, viewAll, viewDepartments, viewJobs } from "./index.js";
 
 export async function home() {
 
@@ -18,6 +18,9 @@ export async function home() {
 
         } else if (answers.action === 'Update employee role') {
             await changeRole();
+        
+        } else if (answers.action === `Update employee manager`) {
+            await changeManager();
 
         } else if (answers.action === 'View all roles') {
             await viewJobs();

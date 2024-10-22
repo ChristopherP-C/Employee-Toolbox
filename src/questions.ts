@@ -14,6 +14,7 @@ export const homeList =
         'View all employees',
         'Add employee',
         'Update employee role',
+        `Update employee manager`,
         'View all roles',
         'Add role',
         'View all departments',
@@ -43,7 +44,30 @@ export async function changeJob() {
     ];
     return jobsList;
 };
-    
+
+export async function changeLead() {
+    const employees = await employeeData();
+
+    const jobsList =
+    [
+        {
+            type: `list`,
+            name: `employees`,
+            message: "Select which employee whose manager you would like to change",
+            choices: employees,
+        },
+        {
+            type: `list`,
+            name: `manager`,
+            message: "Please select a new manager for this employee",
+            choices: [
+                ...employees,
+                {name: 'None', value: null}
+            ],
+        },
+    ];
+    return jobsList;
+};
 export async function createEmployee() {
 
     const jobs = await jobData();
